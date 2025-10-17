@@ -1,11 +1,29 @@
-import "@/styles/globals.css";
-
+// src/pages/_app.js
 export default function App({ Component, pageProps }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <main className="">
+    <>
+      <header style={{ 
+        backgroundColor: '#333', 
+        color: 'white', 
+        padding: '20px',
+        textAlign: 'center'
+      }}>
+        <h1>🎬 Movie Watchlist</h1>
+      </header>
+      
+      <main style={{ minHeight: '80vh' }}>
         <Component {...pageProps} />
       </main>
-    </div>
+      
+      <footer style={{ 
+        backgroundColor: '#333', 
+        color: 'white', 
+        padding: '20px',
+        textAlign: 'center',
+        marginTop: '40px'
+      }}>
+        <p>Feito com ❤️ por ti!</p>
+      </footer>
+    </>
   );
 }

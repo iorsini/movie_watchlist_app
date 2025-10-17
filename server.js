@@ -12,40 +12,89 @@ app.use(cors());
 app.use(express.json());
 
 // Esta constante é relativa às coleções da tua base de dados e deves acrescentar mais se for o caso
-const Nome = require('./models/Nome');
+const Movie = require('./models/Movie');
 
 
 
 // ===== ENDPOINTS DA API =====
 
-// GET /api/nomes - Retorna todos os nomes existentes
-app.get('/api/nomes', async (req, res) => {
+// GET /api/movies - Retorna todos os filmes existentes
+app.get('/api/movies', async (req, res) => {
   try {
-    const nomes = await Nome.find().sort({ nome: 1 });
-    res.json(nomes);
+    const movies = await Movie.find().sort({ title: 1 });
+    res.json(movies);
   } catch (error) {
-    console.error('Erro ao carregar nomes:', error);
+    console.error('Failed to fetch movies:', error);
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
 
-// POST /api/nomes - Adiciona um novo nome à coleção "nomes"
-app.post('/api/nomes', async (req, res) => {
+// POST /api/movies - Adiciona um novo filme
+app.post('/api/movies', async (req, res) => {
   try {
-    const { nome } = req.body;
+    const { title, year, genre, watched, rating } = req.body;
     
-    if (!nome || !nome.trim()) {
-      return res.status(400).json({ erro: 'Nome é obrigatório' });
+    if (!title || !title.trim()) {
+      return res.status(400).json({ erro: 'Título é obrigatório' });
     }
 
-    const novoNome = new Nome({ nome: nome.trim() });
-    const nomeSalvo = await novoNome.save();
-    res.status(201).json(nomeSalvo);
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ erro: 'Este nome já existe' });
+    if (!year) {
+      return res.status(400).json({ erro: 'Ano é obrigatório' });
     }
-    console.error('Erro ao criar nome:', error);
+
+    const newMovie = new Movie({ 
+      title: title.trim(),
+      year,
+      genre: genre?.trim() || '',
+      watched: watched || false,
+      rating: rating || null
+    });
+    
+    const movieSaved = await newMovie.save();
+    res.status(201).json(movieSaved);
+  } catch (error) {
+    console.error('Erro ao criar filme:', error);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+
+// PUT /api/movies/:id - Edita um filme existente
+app.put('/api/movies/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, year, genre, watched, rating } = req.body;
+    
+    const movieUpdated = await Movie.findByIdAndUpdate(
+      id,
+      { title, year, genre, watched, rating },
+      { new: true, runValidators: true }
+    );
+
+    if (!movieUpdated) {
+      return res.status(404).json({ erro: 'Filme não encontrado' });
+    }
+
+    res.json(movieUpdated);
+  } catch (error) {
+    console.error('Erro ao atualizar filme:', error);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+
+// DELETE /api/movies/:id - Elimina um filme
+app.delete('/api/movies/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const movieDeleted = await Movie.findByIdAndDelete(id);
+
+    if (!movieDeleted) {
+      return res.status(404).json({ erro: 'Filme não encontrado' });
+    }
+
+    res.json({ mensagem: 'Filme eliminado com sucesso', movie: movieDeleted });
+  } catch (error) {
+    console.error('Erro ao eliminar filme:', error);
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
