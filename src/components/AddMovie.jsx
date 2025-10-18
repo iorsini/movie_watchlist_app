@@ -11,91 +11,73 @@ export default function AddMovie({ onMovieAdded }) {
     rating: 0
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
-  };
-
-  const handleRatingChange = (newRating) => {
-    setFormData({
-      ...formData,
-      rating: newRating
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const movieData = {
-      ...formData,
-      year: parseInt(formData.year),
-      rating: formData.rating || null
-    };
-
-    await addMovie(movieData);
-    alert('Filme adicionado!');
-    
-    setFormData({
-      title: '',
-      year: '',
-      genre: '',
-      watched: false,
-      rating: 0
-    });
-
-    if (onMovieAdded) onMovieAdded();
+  const handleSubmit = async () => {
+    if (formData.title && formData.year) {
+      const movieData = {
+        ...formData,
+        year: parseInt(formData.year),
+        rating: formData.rating || null
+      };
+      
+      await addMovie(movieData);
+      alert('Movie added successfully!');
+      setFormData({ title: '', year: '', genre: '', watched: false, rating: 0 });
+      if (onMovieAdded) onMovieAdded();
+    }
   };
 
   return (
-    <div>
-      <h2>Adicionar Filme</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Título"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Ano"
-          value={formData.year}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="genre"
-          placeholder="Género"
-          value={formData.genre}
-          onChange={handleChange}
-        />
-        <label>
+    <div className="content-section">
+      <h2 className="section-title">Add New Movie</h2>
+      <div className="movie-form">
+        <div className="form-group">
+          <label>Title</label>
           <input
-            type="checkbox"
-            name="watched"
-            checked={formData.watched}
-            onChange={handleChange}
-          />
-          Já assistido?
-        </label>
-        
-        <div style={{ margin: '20px 0' }}>
-          <label>Nota:</label>
-          <StarRating 
-            rating={formData.rating} 
-            onRatingChange={handleRatingChange}
+            type="text"
+            placeholder="Enter movie title"
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
           />
         </div>
-
-        <button type="submit">Adicionar</button>
-      </form>
+        <div className="form-row">
+          <div className="form-group">
+            <label>Year</label>
+            <input
+              type="number"
+              placeholder="2024"
+              value={formData.year}
+              onChange={(e) => setFormData({...formData, year: e.target.value})}
+            />
+          </div>
+          <div className="form-group">
+            <label>Genre</label>
+            <input
+              type="text"
+              placeholder="Action, Drama..."
+              value={formData.genre}
+              onChange={(e) => setFormData({...formData, genre: e.target.value})}
+            />
+          </div>
+        </div>
+        <div className="form-group checkbox-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={formData.watched}
+              onChange={(e) => setFormData({...formData, watched: e.target.checked})}
+            />
+            <span>Already watched</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label>Rating</label>
+          <StarRating 
+            rating={formData.rating} 
+            onRatingChange={(rating) => setFormData({...formData, rating})}
+          />
+        </div>
+        <button onClick={handleSubmit} className="btn-primary">Add Movie</button>
+      </div>
     </div>
   );
 }

@@ -23,85 +23,69 @@ export default function EditMovie({ movie, onMovieUpdated }) {
     }
   }, [movie]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
-  };
-
-  const handleRatingChange = (newRating) => {
-    setFormData({
-      ...formData,
-      rating: newRating
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     const movieData = {
       ...formData,
       year: parseInt(formData.year),
       rating: formData.rating || null
     };
-
-    await updateMovie(movie._id, movieData);
-    alert('Filme atualizado!');
     
+    await updateMovie(movie._id, movieData);
+    alert('Movie updated successfully!');
     if (onMovieUpdated) onMovieUpdated();
   };
 
-  if (!movie) return <p>Seleciona um filme para editar</p>;
+  if (!movie) return <p className="empty-state">Select a movie to edit</p>;
 
   return (
-    <div>
-      <h2>Editar Filme</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Título"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Ano"
-          value={formData.year}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="genre"
-          placeholder="Género"
-          value={formData.genre}
-          onChange={handleChange}
-        />
-        <label>
+    <div className="content-section">
+      <h2 className="section-title">Edit Movie</h2>
+      <div className="movie-form">
+        <div className="form-group">
+          <label>Title</label>
           <input
-            type="checkbox"
-            name="watched"
-            checked={formData.watched}
-            onChange={handleChange}
-          />
-          Já assistido?
-        </label>
-
-        <div style={{ margin: '20px 0' }}>
-          <label>Nota:</label>
-          <StarRating 
-            rating={formData.rating} 
-            onRatingChange={handleRatingChange}
+            type="text"
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
           />
         </div>
-
-        <button type="submit">Guardar Alterações</button>
-      </form>
+        <div className="form-row">
+          <div className="form-group">
+            <label>Year</label>
+            <input
+              type="number"
+              value={formData.year}
+              onChange={(e) => setFormData({...formData, year: e.target.value})}
+            />
+          </div>
+          <div className="form-group">
+            <label>Genre</label>
+            <input
+              type="text"
+              value={formData.genre}
+              onChange={(e) => setFormData({...formData, genre: e.target.value})}
+            />
+          </div>
+        </div>
+        <div className="form-group checkbox-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={formData.watched}
+              onChange={(e) => setFormData({...formData, watched: e.target.checked})}
+            />
+            <span>Already watched</span>
+          </label>
+        </div>
+        <div className="form-group">
+          <label>Rating</label>
+          <StarRating 
+            rating={formData.rating} 
+            onRatingChange={(rating) => setFormData({...formData, rating})}
+          />
+        </div>
+        <button onClick={handleSubmit} className="btn-primary">Save Changes</button>
+      </div>
     </div>
   );
 }

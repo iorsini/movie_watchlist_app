@@ -14,26 +14,42 @@ export default function AllMovies({ onEditClick }) {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Tens a certeza que queres eliminar este filme?')) {
+    if (confirm('Are you sure you want to delete this movie?')) {
       await deleteMovie(id);
       loadMovies();
     }
   };
 
   return (
-    <div>
-      <h2>All Movies</h2>
-      {movies.length === 0 && <p>No movies added yet!</p>}
-      {movies.map(movie => (
-        <div key={movie._id} style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0' }}>
-          <h3>{movie.title} ({movie.year})</h3>
-          <p>Género: {movie.genre}</p>
-          <p>Assistido: {movie.watched ? 'Sim ✓' : 'Não'}</p>
-          {movie.rating && <p>Nota: {movie.rating}/10 ⭐</p>}
-          <button onClick={() => onEditClick && onEditClick(movie)}>Editar</button>
-          <button onClick={() => handleDelete(movie._id)} style={{ marginLeft: '10px' }}>Eliminar</button>
-        </div>
-      ))}
+    <div className="content-section">
+      <h2 className="section-title">All Movies</h2>
+      {movies.length === 0 && <p className="empty-state">No movies added yet!</p>}
+      <div className="movie-grid">
+        {movies.map(movie => (
+          <div key={movie._id} className="movie-card">
+            <div className="movie-poster">
+              <div className="poster-placeholder">{movie.title[0]}</div>
+            </div>
+            <div className="movie-info">
+              <h3 className="movie-title">{movie.title}</h3>
+              <p className="movie-year">{movie.year}</p>
+              <p className="movie-genre">{movie.genre}</p>
+              <div className="movie-meta">
+                <span className={`status-badge ${movie.watched ? 'watched' : 'unwatched'}`}>
+                  {movie.watched ? '✓ Watched' : 'To Watch'}
+                </span>
+                {movie.rating > 0 && (
+                  <span className="rating-badge">★ {movie.rating}/10</span>
+                )}
+              </div>
+              <div className="movie-actions">
+                <button onClick={() => onEditClick(movie)} className="btn-secondary">Edit</button>
+                <button onClick={() => handleDelete(movie._id)} className="btn-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
