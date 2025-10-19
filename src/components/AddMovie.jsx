@@ -11,12 +11,20 @@ export default function AddMovie({ onMovieAdded }) {
     rating: 0
   });
 
+  const handleWatchedChange = (checked) => {
+    setFormData({
+      ...formData, 
+      watched: checked,
+      rating: checked ? formData.rating : 0 // Reset rating se não foi visto
+    });
+  };
+
   const handleSubmit = async () => {
     if (formData.title && formData.year) {
       const movieData = {
         ...formData,
         year: parseInt(formData.year),
-        rating: formData.rating || null
+        rating: formData.watched ? formData.rating : null // Só salva rating se foi visto
       };
       
       await addMovie(movieData);
@@ -64,18 +72,23 @@ export default function AddMovie({ onMovieAdded }) {
             <input
               type="checkbox"
               checked={formData.watched}
-              onChange={(e) => setFormData({...formData, watched: e.target.checked})}
+              onChange={(e) => handleWatchedChange(e.target.checked)}
             />
             <span>Already watched</span>
           </label>
         </div>
-        <div className="form-group">
-          <label>Rating</label>
-          <StarRating 
-            rating={formData.rating} 
-            onRatingChange={(rating) => setFormData({...formData, rating})}
-          />
-        </div>
+        
+        {/* SÓ MOSTRA RATING SE O FILME FOI VISTO */}
+        {formData.watched && (
+          <div className="form-group">
+            <label>Rating</label>
+            <StarRating 
+              rating={formData.rating} 
+              onRatingChange={(rating) => setFormData({...formData, rating})}
+            />
+          </div>
+        )}
+        
         <button onClick={handleSubmit} className="btn-primary">Add Movie</button>
       </div>
     </div>
