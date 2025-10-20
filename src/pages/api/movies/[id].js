@@ -1,4 +1,3 @@
-// src/pages/api/movies/[id].js
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
 import connectDB from '../../../../lib/mongodb'; // CAMINHO CORRETO!

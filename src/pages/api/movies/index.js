@@ -1,8 +1,8 @@
-// src/pages/api/movies/index.js - ATUALIZADO
+
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
-import connectDB from '../../../../lib/mongodb'; // CAMINHO CORRETO!
-import Movie from '../../../../models/Movie'; // CAMINHO CORRETO!
+import connectDB from '../../../../lib/mongodb';
+import Movie from '../../../../models/Movie';
 
 export default async function handler(req, res) {
   // Verificar autenticação

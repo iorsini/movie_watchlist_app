@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useTranslation } from "../utils/translations";
 import AllMovies from "../components/AllMovies";
 import WatchedMovies from "../components/WatchedMovies";
 import NotWatchedMovies from "../components/NotWatchedMovies";
@@ -14,18 +15,26 @@ export default function Home() {
   const [activeView, setActiveView] = useState("all");
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [language, setLanguage] = useState("en");
+  const [showSettings, setShowSettings] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const t = useTranslation(language);
 
   // Redireciona se não estiver autenticado
   if (status === "loading") {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        background: '#0a0a0a',
-        color: '#fff'
-      }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#0a0a0a",
+          color: "#fff",
+        }}
+      >
         Loading...
       </div>
     );
@@ -42,8 +51,28 @@ export default function Home() {
   };
 
   const handleUpdate = () => {
-    setRefreshKey(prev => prev + 1);
+    setRefreshKey((prev) => prev + 1);
     setActiveView("all");
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch("/api/auth/delete-account", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        alert(t.accountDeleted);
+        signOut({ callbackUrl: "/login" });
+      } else {
+        alert("Error deleting account");
+      }
+    } catch (error) {
+      alert("Error deleting account");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -272,7 +301,7 @@ export default function Home() {
         }
 
         .movie-poster {
-          aspect-ratio: 2/3;
+          aspect-ratio: 1/1;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           display: flex;
           align-items: center;
@@ -292,8 +321,7 @@ export default function Home() {
         }
 
         .poster-placeholder {
-          font-size: 64px;
-          font-weight: 700;
+          font-size: 48px;
           color: rgba(255, 255, 255, 0.4);
           text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
@@ -593,6 +621,208 @@ export default function Home() {
           }
         }
 
+        .btn-settings {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 18px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .btn-settings:hover {
+          background: rgba(255, 255, 255, 0.15);
+          transform: rotate(45deg);
+        }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeInModal 0.2s ease;
+        }
+
+        .modal {
+          background: rgba(20, 20, 20, 0.98);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          padding: 32px;
+          max-width: 500px;
+          width: 90%;
+          animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 24px;
+          color: #fff;
+        }
+
+        .modal-section {
+          margin-bottom: 28px;
+        }
+
+        .modal-section-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #b3b3b3;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 12px;
+        }
+
+        .language-buttons {
+          display: flex;
+          gap: 12px;
+        }
+
+        .lang-button {
+          flex: 1;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .lang-button:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .lang-button.active {
+          background: rgba(229, 9, 20, 0.2);
+          border-color: #e50914;
+          color: #e50914;
+        }
+
+        .danger-zone {
+          background: rgba(229, 9, 20, 0.1);
+          border: 1px solid rgba(229, 9, 20, 0.3);
+          border-radius: 12px;
+          padding: 20px;
+        }
+
+        .danger-zone-title {
+          font-size: 16px;
+          font-weight: 700;
+          color: #e50914;
+          margin-bottom: 8px;
+        }
+
+        .danger-zone-text {
+          font-size: 13px;
+          color: #999;
+          margin-bottom: 16px;
+        }
+
+        .btn-danger-full {
+          width: 100%;
+          padding: 12px;
+          background: rgba(229, 9, 20, 0.15);
+          border: 1px solid rgba(229, 9, 20, 0.3);
+          color: #e50914;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .btn-danger-full:hover {
+          background: rgba(229, 9, 20, 0.25);
+          border-color: rgba(229, 9, 20, 0.5);
+        }
+
+        .modal-footer {
+          display: flex;
+          gap: 12px;
+          margin-top: 24px;
+        }
+
+        .btn-modal {
+          flex: 1;
+          padding: 12px;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-cancel:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-confirm-delete {
+          background: #e50914;
+          color: #fff;
+        }
+
+        .btn-confirm-delete:hover {
+          background: #c20812;
+          box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-confirm-delete:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .delete-modal-warning {
+          background: rgba(255, 193, 7, 0.15);
+          border: 1px solid rgba(255, 193, 7, 0.3);
+          color: #FFC107;
+          padding: 12px 16px;
+          border-radius: 8px;
+          font-size: 13px;
+          margin-bottom: 24px;
+          line-height: 1.5;
+        }
+
+        @keyframes fadeInModal {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from { 
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @media (max-width: 480px) {
           .header-content {
             padding: 12px 16px;
@@ -660,6 +890,10 @@ export default function Home() {
           .rating-large {
             font-size: 20px;
           }
+
+          .modal {
+            padding: 24px;
+          }
         }
 
         @media (min-width: 481px) and (max-width: 768px) {
@@ -709,9 +943,18 @@ export default function Home() {
             <div className="header-top">
               <div className="logo">🎬 MOVIELIST</div>
               <div className="user-info">
-                <span className="user-name">Hi, {session.user.name}!</span>
+                <span className="user-name">
+                  {t.hi}, {session.user.name}!
+                </span>
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="btn-settings"
+                  title={t.settings}
+                >
+                  ⚙️
+                </button>
                 <button onClick={() => signOut()} className="btn-logout">
-                  Logout
+                  {t.logout}
                 </button>
               </div>
             </div>
@@ -720,25 +963,31 @@ export default function Home() {
                 className={`nav-btn ${activeView === "all" ? "active" : ""}`}
                 onClick={() => setActiveView("all")}
               >
-                All Movies
+                {t.allMovies}
               </button>
               <button
-                className={`nav-btn ${activeView === "watched" ? "active" : ""}`}
+                className={`nav-btn ${
+                  activeView === "watched" ? "active" : ""
+                }`}
                 onClick={() => setActiveView("watched")}
               >
-                Watched
+                {t.watched}
               </button>
               <button
-                className={`nav-btn ${activeView === "notWatched" ? "active" : ""}`}
+                className={`nav-btn ${
+                  activeView === "notWatched" ? "active" : ""
+                }`}
                 onClick={() => setActiveView("notWatched")}
               >
-                To Watch
+                {t.toWatch}
               </button>
               <button
-                className={`nav-btn ${activeView === "byRating" ? "active" : ""}`}
+                className={`nav-btn ${
+                  activeView === "byRating" ? "active" : ""
+                }`}
                 onClick={() => setActiveView("byRating")}
               >
-                Top Rated
+                {t.topRated}
               </button>
             </nav>
           </div>
@@ -746,18 +995,38 @@ export default function Home() {
 
         <main className="content">
           {activeView === "all" && (
-            <AllMovies onEditClick={handleEditClick} key={refreshKey} />
+            <AllMovies
+              onEditClick={handleEditClick}
+              key={refreshKey}
+              language={language}
+            />
           )}
           {activeView === "watched" && (
-            <WatchedMovies onEditClick={handleEditClick} key={refreshKey} />
+            <WatchedMovies
+              onEditClick={handleEditClick}
+              key={refreshKey}
+              language={language}
+            />
           )}
           {activeView === "notWatched" && (
-            <NotWatchedMovies onEditClick={handleEditClick} key={refreshKey} />
+            <NotWatchedMovies
+              onEditClick={handleEditClick}
+              key={refreshKey}
+              language={language}
+            />
           )}
-          {activeView === "byRating" && <MoviesByRating key={refreshKey} />}
-          {activeView === "add" && <AddMovie onMovieAdded={handleUpdate} />}
+          {activeView === "byRating" && (
+            <MoviesByRating key={refreshKey} language={language} />
+          )}
+          {activeView === "add" && (
+            <AddMovie onMovieAdded={handleUpdate} language={language} />
+          )}
           {activeView === "edit" && (
-            <EditMovie movie={selectedMovie} onMovieUpdated={handleUpdate} />
+            <EditMovie
+              movie={selectedMovie}
+              onMovieUpdated={handleUpdate}
+              language={language}
+            />
           )}
         </main>
 
@@ -765,11 +1034,86 @@ export default function Home() {
           <button
             className={`fab ${activeView === "add" ? "active" : ""}`}
             onClick={() => setActiveView(activeView === "add" ? "all" : "add")}
-            title="Add Movie"
+            title={t.addMovie}
           >
             +
           </button>
         </div>
+
+        {showSettings && (
+          <div className="modal-overlay" onClick={() => setShowSettings(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <h2 className="modal-header">{t.settings}</h2>
+
+              <div className="modal-section">
+                <div className="modal-section-title">{t.language}</div>
+                <div className="language-buttons">
+                  <button
+                    className={`lang-button ${
+                      language === "en" ? "active" : ""
+                    }`}
+                    onClick={() => setLanguage("en")}
+                  >
+                    English
+                  </button>
+                  <button
+                    className={`lang-button ${
+                      language === "pt" ? "active" : ""
+                    }`}
+                    onClick={() => setLanguage("pt")}
+                  >
+                    Português
+                  </button>
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <div className="danger-zone">
+                  <div className="danger-zone-title">{t.dangerZone}</div>
+                  <div className="danger-zone-text">{t.dangerZoneWarning}</div>
+                  <button
+                    className="btn-danger-full"
+                    onClick={() => {
+                      setShowSettings(false);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    {t.deleteAccount}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDeleteModal && (
+          <div
+            className="modal-overlay"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <h2 className="modal-header">⚠️ {t.deleteAccount}</h2>
+              <div className="delete-modal-warning">
+                {t.deleteAccountConfirm}
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-modal btn-cancel"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  {t.cancel}
+                </button>
+                <button
+                  className="btn-modal btn-confirm-delete"
+                  onClick={handleDeleteAccount}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Deleting..." : t.confirm}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

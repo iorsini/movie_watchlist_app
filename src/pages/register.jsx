@@ -1,12 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+
+const translations = {
+  en: {
+    title: 'Create Account',
+    name: 'Name',
+    email: 'Email',
+    password: 'Password',
+    signUp: 'Sign Up',
+    creatingAccount: 'Creating account...',
+    haveAccount: 'Already have an account?',
+    signIn: 'Sign in',
+    namePlaceholder: 'Your name',
+    emailPlaceholder: 'your@email.com',
+    passwordPlaceholder: 'Min. 6 characters',
+  },
+  pt: {
+    title: 'Criar Conta',
+    name: 'Nome',
+    email: 'Email',
+    password: 'Password',
+    signUp: 'Criar Conta',
+    creatingAccount: 'A criar conta...',
+    haveAccount: 'Já tens conta?',
+    signIn: 'Entrar',
+    namePlaceholder: 'O teu nome',
+    emailPlaceholder: 'teu@email.com',
+    passwordPlaceholder: 'Mín. 6 caracteres',
+  }
+};
 
 export default function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('movielist-language') || 'en';
+    setLanguage(savedLang);
+  }, []);
+
+  const t = translations[language];
+
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    localStorage.setItem('movielist-language', lang);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +68,6 @@ export default function Register() {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Redireciona para login após registro bem-sucedido
       router.push('/login?registered=true');
     } catch (err) {
       setError(err.message);
@@ -67,6 +108,34 @@ export default function Register() {
           border-radius: 16px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           backdrop-filter: blur(20px);
+        }
+
+        .language-selector {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 24px;
+        }
+
+        .lang-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .lang-btn.active {
+          background: rgba(229, 9, 20, 0.2);
+          border-color: #e50914;
+          color: #e50914;
         }
 
         .auth-logo {
@@ -177,17 +246,32 @@ export default function Register() {
 
       <div className="auth-container">
         <div className="auth-card">
+          <div className="language-selector">
+            <button
+              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('en')}
+            >
+              🇬🇧 EN
+            </button>
+            <button
+              className={`lang-btn ${language === 'pt' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('pt')}
+            >
+              🇵🇹 PT
+            </button>
+          </div>
+
           <div className="auth-logo">🎬 MOVIELIST</div>
-          <h1 className="auth-title">Create Account</h1>
+          <h1 className="auth-title">{t.title}</h1>
 
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Name</label>
+              <label>{t.name}</label>
               <input
                 type="text"
-                placeholder="Your name"
+                placeholder={t.namePlaceholder}
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 required
@@ -195,10 +279,10 @@ export default function Register() {
             </div>
 
             <div className="form-group">
-              <label>Email</label>
+              <label>{t.email}</label>
               <input
                 type="email"
-                placeholder="your@email.com"
+                placeholder={t.emailPlaceholder}
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 required
@@ -206,10 +290,10 @@ export default function Register() {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label>{t.password}</label>
               <input
                 type="password"
-                placeholder="Min. 6 characters"
+                placeholder={t.passwordPlaceholder}
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
                 required
@@ -218,12 +302,12 @@ export default function Register() {
             </div>
 
             <button type="submit" className="btn-auth" disabled={loading}>
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? t.creatingAccount : t.signUp}
             </button>
           </form>
 
           <div className="auth-footer">
-            Already have an account? <Link href="/login">Sign in</Link>
+            {t.haveAccount} <Link href="/login">{t.signIn}</Link>
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { addMovie } from '../services/api';
 import StarRating from './StarRating';
+import { useTranslation } from '../utils/translations';
 
-export default function AddMovie({ onMovieAdded }) {
+export default function AddMovie({ onMovieAdded, language = 'en' }) {
   const [formData, setFormData] = useState({
     title: '',
     year: '',
@@ -11,11 +12,13 @@ export default function AddMovie({ onMovieAdded }) {
     rating: 0
   });
 
+  const t = useTranslation(language);
+
   const handleWatchedChange = (checked) => {
     setFormData({
       ...formData, 
       watched: checked,
-      rating: checked ? formData.rating : 0 // Reset rating se não foi visto
+      rating: checked ? formData.rating : 0
     });
   };
 
@@ -24,11 +27,11 @@ export default function AddMovie({ onMovieAdded }) {
       const movieData = {
         ...formData,
         year: parseInt(formData.year),
-        rating: formData.watched ? formData.rating : null // Só salva rating se foi visto
+        rating: formData.watched ? formData.rating : null
       };
       
       await addMovie(movieData);
-      alert('Movie added successfully!');
+      alert(t.movieAdded);
       setFormData({ title: '', year: '', genre: '', watched: false, rating: 0 });
       if (onMovieAdded) onMovieAdded();
     }
@@ -36,20 +39,20 @@ export default function AddMovie({ onMovieAdded }) {
 
   return (
     <div className="content-section">
-      <h2 className="section-title">Add New Movie</h2>
+      <h2 className="section-title">{t.addNewMovie}</h2>
       <div className="movie-form">
         <div className="form-group">
-          <label>Title</label>
+          <label>{t.title}</label>
           <input
             type="text"
-            placeholder="Enter movie title"
+            placeholder={t.title}
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
           />
         </div>
         <div className="form-row">
           <div className="form-group">
-            <label>Year</label>
+            <label>{t.year}</label>
             <input
               type="number"
               placeholder="2024"
@@ -58,10 +61,10 @@ export default function AddMovie({ onMovieAdded }) {
             />
           </div>
           <div className="form-group">
-            <label>Genre</label>
+            <label>{t.genre}</label>
             <input
               type="text"
-              placeholder="Action, Drama..."
+              placeholder={t.genre}
               value={formData.genre}
               onChange={(e) => setFormData({...formData, genre: e.target.value})}
             />
@@ -74,22 +77,22 @@ export default function AddMovie({ onMovieAdded }) {
               checked={formData.watched}
               onChange={(e) => handleWatchedChange(e.target.checked)}
             />
-            <span>Already watched</span>
+            <span>{t.alreadyWatched}</span>
           </label>
         </div>
         
-        {/* SÓ MOSTRA RATING SE O FILME FOI VISTO */}
         {formData.watched && (
           <div className="form-group">
-            <label>Rating</label>
+            <label>{t.rating}</label>
             <StarRating 
               rating={formData.rating} 
               onRatingChange={(rating) => setFormData({...formData, rating})}
+              language={language}
             />
           </div>
         )}
         
-        <button onClick={handleSubmit} className="btn-primary">Add Movie</button>
+        <button onClick={handleSubmit} className="btn-primary">{t.addMovie}</button>
       </div>
     </div>
   );

@@ -1,14 +1,51 @@
-// pages/login.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+
+const translations = {
+  en: {
+    title: 'Welcome Back',
+    email: 'Email',
+    password: 'Password',
+    signIn: 'Sign In',
+    signingIn: 'Signing in...',
+    noAccount: "Don't have an account?",
+    signUp: 'Sign up',
+    emailPlaceholder: 'your@email.com',
+    passwordPlaceholder: '••••••••',
+  },
+  pt: {
+    title: 'Bem-vindo',
+    email: 'Email',
+    password: 'Palavra-passe',
+    signIn: 'Entrar',
+    signingIn: 'A entrar...',
+    noAccount: 'Não tens conta?',
+    signUp: 'Criar conta',
+    emailPlaceholder: 'teu@email.com',
+    passwordPlaceholder: '••••••••',
+  }
+};
 
 export default function Login() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('movielist-language') || 'en';
+    setLanguage(savedLang);
+  }, []);
+
+  const t = translations[language];
+
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    localStorage.setItem('movielist-language', lang);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +103,34 @@ export default function Login() {
           border-radius: 16px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           backdrop-filter: blur(20px);
+        }
+
+        .language-selector {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 24px;
+        }
+
+        .lang-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .lang-btn.active {
+          background: rgba(229, 9, 20, 0.2);
+          border-color: #e50914;
+          color: #e50914;
         }
 
         .auth-logo {
@@ -176,17 +241,32 @@ export default function Login() {
 
       <div className="auth-container">
         <div className="auth-card">
+          <div className="language-selector">
+            <button
+              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('en')}
+            >
+              EN
+            </button>
+            <button
+              className={`lang-btn ${language === 'pt' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('pt')}
+            >
+              PT
+            </button>
+          </div>
+
           <div className="auth-logo">🎬 MOVIELIST</div>
-          <h1 className="auth-title">Welcome Back</h1>
+          <h1 className="auth-title">{t.title}</h1>
 
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Email</label>
+              <label>{t.email}</label>
               <input
                 type="email"
-                placeholder="your@email.com"
+                placeholder={t.emailPlaceholder}
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 required
@@ -194,10 +274,10 @@ export default function Login() {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label>{t.password}</label>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder={t.passwordPlaceholder}
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
                 required
@@ -205,12 +285,12 @@ export default function Login() {
             </div>
 
             <button type="submit" className="btn-auth" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t.signingIn : t.signIn}
             </button>
           </form>
 
           <div className="auth-footer">
-            Don't have an account? <Link href="/register">Sign up</Link>
+            {t.noAccount} <Link href="/register">{t.signUp}</Link>
           </div>
         </div>
       </div>

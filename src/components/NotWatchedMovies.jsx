@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getAllMovies, deleteMovie } from '../services/api';
+import { useTranslation } from '../utils/translations';
 
-export default function NotWatchedMovies({ onEditClick }) {
+export default function NotWatchedMovies({ onEditClick, language = 'en' }) {
   const [movies, setMovies] = useState([]);
+  const t = useTranslation(language);
 
   useEffect(() => {
     loadNotWatchedMovies();
@@ -15,7 +17,7 @@ export default function NotWatchedMovies({ onEditClick }) {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this movie?')) {
+    if (confirm(t.deleteMovieConfirm)) {
       await deleteMovie(id);
       loadNotWatchedMovies();
     }
@@ -23,13 +25,13 @@ export default function NotWatchedMovies({ onEditClick }) {
 
   return (
     <div className="content-section">
-      <h2 className="section-title">To Watch</h2>
-      {movies.length === 0 && <p className="empty-state">No movies to watch!</p>}
+      <h2 className="section-title">{t.toWatch}</h2>
+      {movies.length === 0 && <p className="empty-state">{t.noToWatch}</p>}
       <div className="movie-grid">
         {movies.map(movie => (
           <div key={movie._id} className="movie-card">
             <div className="movie-poster">
-              <div className="poster-placeholder">{movie.title[0]}</div>
+              <div className="poster-placeholder">🎬</div>
             </div>
             <div className="movie-info">
               <h3 className="movie-title">{movie.title}</h3>
@@ -41,8 +43,12 @@ export default function NotWatchedMovies({ onEditClick }) {
                 )}
               </div>
               <div className="movie-actions">
-                <button onClick={() => onEditClick(movie)} className="btn-secondary">Edit</button>
-                <button onClick={() => handleDelete(movie._id)} className="btn-danger">Delete</button>
+                <button onClick={() => onEditClick(movie)} className="btn-secondary">
+                  {t.edit}
+                </button>
+                <button onClick={() => handleDelete(movie._id)} className="btn-danger">
+                  {t.delete}
+                </button>
               </div>
             </div>
           </div>

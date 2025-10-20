@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getAllMovies, deleteMovie } from '../services/api';
+import { useTranslation } from '../utils/translations';
 
-export default function AllMovies({ onEditClick }) {
+export default function AllMovies({ onEditClick, language = 'en' }) {
   const [movies, setMovies] = useState([]);
+  const t = useTranslation(language);
 
   useEffect(() => {
     loadMovies();
@@ -14,7 +16,7 @@ export default function AllMovies({ onEditClick }) {
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this movie?')) {
+    if (confirm(t.deleteMovieConfirm)) {
       await deleteMovie(id);
       loadMovies();
     }
@@ -22,13 +24,13 @@ export default function AllMovies({ onEditClick }) {
 
   return (
     <div className="content-section">
-      <h2 className="section-title">All Movies</h2>
-      {movies.length === 0 && <p className="empty-state">No movies added yet!</p>}
+      <h2 className="section-title">{t.allMovies}</h2>
+      {movies.length === 0 && <p className="empty-state">{t.noMovies}</p>}
       <div className="movie-grid">
         {movies.map(movie => (
           <div key={movie._id} className="movie-card">
             <div className="movie-poster">
-              <div className="poster-placeholder">{movie.title[0]}</div>
+              <div className="poster-placeholder">🎬</div>
             </div>
             <div className="movie-info">
               <h3 className="movie-title">{movie.title}</h3>
@@ -36,15 +38,19 @@ export default function AllMovies({ onEditClick }) {
               <p className="movie-genre">{movie.genre}</p>
               <div className="movie-meta">
                 <span className={`status-badge ${movie.watched ? 'watched' : 'unwatched'}`}>
-                  {movie.watched ? '✓ Watched' : 'To Watch'}
+                  {movie.watched ? `✓ ${t.watched}` : t.toWatch}
                 </span>
                 {movie.rating > 0 && (
                   <span className="rating-badge">★ {movie.rating}/10</span>
                 )}
               </div>
               <div className="movie-actions">
-                <button onClick={() => onEditClick(movie)} className="btn-secondary">Edit</button>
-                <button onClick={() => handleDelete(movie._id)} className="btn-danger">Delete</button>
+                <button onClick={() => onEditClick(movie)} className="btn-secondary">
+                  {t.edit}
+                </button>
+                <button onClick={() => handleDelete(movie._id)} className="btn-danger">
+                  {t.delete}
+                </button>
               </div>
             </div>
           </div>

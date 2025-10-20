@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getAllMovies } from '../services/api';
+import { useTranslation } from '../utils/translations';
 
-export default function MoviesByRating() {
+export default function MoviesByRating({ language = 'en' }) {
   const [movies, setMovies] = useState([]);
+  const t = useTranslation(language);
 
   useEffect(() => {
     loadMoviesByRating();
@@ -17,8 +19,8 @@ export default function MoviesByRating() {
 
   return (
     <div className="content-section">
-      <h2 className="section-title">Top Rated</h2>
-      {movies.length === 0 && <p className="empty-state">No rated movies yet!</p>}
+      <h2 className="section-title">{t.topRated}</h2>
+      {movies.length === 0 && <p className="empty-state">{t.noRatedMovies}</p>}
       <div className="movie-list">
         {movies.map((movie, index) => (
           <div key={movie._id} className="movie-list-item">

@@ -1,4 +1,3 @@
-// server.js - VERSÃO SIMPLIFICADA (sem Express)
 require('dotenv').config();
 const { createServer } = require('http');
 const { parse } = require('url');

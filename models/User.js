@@ -1,4 +1,3 @@
-// models/User.js (criar na RAIZ do projeto, não em src/)
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({

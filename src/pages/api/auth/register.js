@@ -1,4 +1,3 @@
-// src/pages/api/auth/register.js
 import bcrypt from 'bcryptjs';
 import connectDB from '../../../../lib/mongodb'; // CAMINHO CORRETO!
 import User from '../../../../models/User'; // CAMINHO CORRETO!
