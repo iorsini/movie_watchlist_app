@@ -622,18 +622,18 @@ export default function Home() {
         }
 
         .btn-settings {
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: #fff;
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 18px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+        background: transparent;
+        border: none;
+        color: #fff;
+        padding: 0px;
+        border-radius: 6px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+}
 
         .btn-settings:hover {
           background: rgba(255, 255, 255, 0.15);
