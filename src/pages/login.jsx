@@ -1,13 +1,11 @@
 // /src/pages/login.jsx
 {/*Esse bloco de código é a página de login da aplicação Next.js com autenticação via next-auth.
 */}
+import { useState, useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import { useState, useEffect } from 'react'; // Importa hooks do React para manipulação de estado e efeitos colaterais
-import { signIn } from 'next-auth/react'; // Importa função de login do next-auth
-import { useRouter } from 'next/router'; // Importa hook do Next.js para navegação programática
-import Link from 'next/link'; // Importa componente Link do Next.js para navegação interna
-
-// Objeto de traduções para suportar múltiplos idiomas
 const translations = {
   en: {
     title: 'Welcome Back',
@@ -34,55 +32,51 @@ const translations = {
 };
 
 export default function Login() {
-  const router = useRouter(); // Hook para navegação programática
-  const [formData, setFormData] = useState({ email: '', password: '' }); // Estado para armazenar dados do formulário
-  const [error, setError] = useState(''); // Estado para mensagens de erro
-  const [loading, setLoading] = useState(false); // Estado para indicar carregamento do login
-  const [language, setLanguage] = useState('en'); // Estado para controlar idioma da interface
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState('en');
 
-  // Hook para carregar idioma salvo no localStorage ao montar o componente
   useEffect(() => {
     const savedLang = localStorage.getItem('movielist-language') || 'en';
     setLanguage(savedLang);
   }, []);
 
-  const t = translations[language]; // Seleciona as traduções com base no idioma atual
+  const t = translations[language];
 
-  // Função para alterar idioma e salvar no localStorage
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     localStorage.setItem('movielist-language', lang);
   };
 
-  // Função que lida com envio do formulário de login
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita reload da página
-    setError(''); // Reseta erros anteriores
-    setLoading(true); // Indica que o login está em progresso
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
     try {
-      const result = await signIn('credentials', { // Chama função do next-auth para login com credenciais
-        redirect: false, // Evita redirecionamento automático
-        email: formData.email, // Passa email do formulário
-        password: formData.password, // Passa senha do formulário
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
       });
 
       if (result.error) {
-        setError(result.error); // Exibe erro retornado pelo next-auth
+        setError(result.error);
       } else {
-        router.push('/'); // Redireciona para página principal após login
+        router.push('/');
       }
     } catch (err) {
-      setError('Something went wrong'); // Mensagem de erro genérica
+      setError('Something went wrong');
     } finally {
-      setLoading(false); // Finaliza estado de carregamento
+      setLoading(false);
     }
   };
 
   return (
     <>
       <style>{`
-        /* Reset e estilo global */
         * {
           margin: 0;
           padding: 0;
@@ -95,7 +89,6 @@ export default function Login() {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Container centralizado da página de login */
         .auth-container {
           min-height: 100vh;
           display: flex;
@@ -105,7 +98,6 @@ export default function Login() {
           padding: 20px;
         }
 
-        /* Card de autenticação */
         .auth-card {
           width: 100%;
           max-width: 450px;
@@ -116,7 +108,6 @@ export default function Login() {
           backdrop-filter: blur(20px);
         }
 
-        /* Seleção de idioma */
         .language-selector {
           display: flex;
           justify-content: center;
@@ -124,7 +115,6 @@ export default function Login() {
           margin-bottom: 24px;
         }
 
-        /* Botões de idioma */
         .lang-btn {
           background: rgba(255, 255, 255, 0.08);
           border: 1px solid rgba(255, 255, 255, 0.15);
@@ -146,7 +136,6 @@ export default function Login() {
           color: #e50914;
         }
 
-        /* Logo da aplicação */
         .auth-logo {
           font-size: 32px;
           font-weight: 700;
@@ -158,7 +147,6 @@ export default function Login() {
           letter-spacing: 1px;
         }
 
-        /* Título da página de login */
         .auth-title {
           font-size: 28px;
           font-weight: 700;
@@ -167,7 +155,6 @@ export default function Login() {
           color: #fff;
         }
 
-        /* Grupos de campos do formulário */
         .form-group {
           margin-bottom: 24px;
         }
@@ -182,7 +169,6 @@ export default function Login() {
           letter-spacing: 0.5px;
         }
 
-        /* Inputs do formulário */
         .form-group input {
           width: 100%;
           padding: 14px 16px;
@@ -201,7 +187,6 @@ export default function Login() {
           box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
         }
 
-        /* Mensagem de erro */
         .error-message {
           background: rgba(229, 9, 20, 0.15);
           border: 1px solid rgba(229, 9, 20, 0.3);
@@ -213,7 +198,6 @@ export default function Login() {
           text-align: center;
         }
 
-        /* Botão de login */
         .btn-auth {
           width: 100%;
           padding: 14px;
@@ -239,7 +223,6 @@ export default function Login() {
           cursor: not-allowed;
         }
 
-        /* Rodapé do card de login */
         .auth-footer {
           text-align: center;
           margin-top: 24px;
@@ -259,11 +242,8 @@ export default function Login() {
         }
       `}</style>
 
-      {/* Container central da página */}
       <div className="auth-container">
         <div className="auth-card">
-
-          {/* Seleção de idioma */}
           <div className="language-selector">
             <button
               className={`lang-btn ${language === 'en' ? 'active' : ''}`}
@@ -279,16 +259,12 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Logo e título */}
           <div className="auth-logo">🎬 MOVIELIST</div>
           <h1 className="auth-title">{t.title}</h1>
 
-          {/* Mensagem de erro */}
           {error && <div className="error-message">{error}</div>}
 
-          {/* Formulário de login */}
           <form onSubmit={handleSubmit}>
-            {/* Campo de email */}
             <div className="form-group">
               <label>{t.email}</label>
               <input
@@ -300,7 +276,6 @@ export default function Login() {
               />
             </div>
 
-            {/* Campo de senha */}
             <div className="form-group">
               <label>{t.password}</label>
               <input
@@ -312,13 +287,11 @@ export default function Login() {
               />
             </div>
 
-            {/* Botão de envio */}
             <button type="submit" className="btn-auth" disabled={loading}>
               {loading ? t.signingIn : t.signIn}
             </button>
           </form>
 
-          {/* Rodapé com link para registrar */}
           <div className="auth-footer">
             {t.noAccount} <Link href="/register">{t.signUp}</Link>
           </div>
