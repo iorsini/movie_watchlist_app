@@ -1,3 +1,7 @@
+// /src/components/NotWatchedMovies.jsx
+{/*Esse bloco de código é o componente que mostra apenas os filmes ainda não assistidos 
+  (uma espécie de “lista de pendentes”
+*/}
 import { useState, useEffect } from 'react';
 import { getAllMovies, deleteMovie } from '../services/api';
 import { useTranslation } from '../utils/translations';

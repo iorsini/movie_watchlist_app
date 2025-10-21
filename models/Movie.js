@@ -1,3 +1,9 @@
+// /models/Movie.js
+{/* 
+Esse bloco de código define e exporta um modelo de dados (“model”) do MongoDB chamado Movie.
+Ele descreve como um filme deve ser armazenado no banco de dados.
+*/}
+
 const mongoose = require('mongoose');
 
 const movieSchema = new mongoose.Schema({

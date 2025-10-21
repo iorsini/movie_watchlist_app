@@ -1,3 +1,7 @@
+// /src/pages/api/auth/[...nextauth.js]
+{/*Esse bloco de código é uma configuração de autenticação usando o NextAuth.js em um projeto Next.js, 
+  com login via credenciais (email e senha) e integração com um banco de dados MongoDB.
+*/}
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';

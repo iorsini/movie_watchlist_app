@@ -1,3 +1,7 @@
+// /src/components/MoviesByRating.jsx
+{/*Esse bloco de código é o componente de filmes ordenados por avaliação (rating).
+  Ele mostra um “ranking” dos melhores filmes que o usuário avaliou.
+*/}
 import { useState, useEffect } from 'react';
 import { getAllMovies } from '../services/api';
 import { useTranslation } from '../utils/translations';

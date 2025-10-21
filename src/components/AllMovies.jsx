@@ -1,3 +1,7 @@
+// /src/components/AllMovies.jsx
+{/*Esse bloco de código é responsável por listar todos os filmes cadastrados, 
+  além de permitir editar ou deletar cada um.
+*/}
 import { useState, useEffect } from 'react';
 import { getAllMovies, deleteMovie } from '../services/api';
 import { useTranslation } from '../utils/translations';

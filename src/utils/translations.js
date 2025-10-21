@@ -1,4 +1,7 @@
 // src/utils/translations.js
+{/*
+    Esse bloco de código é um módulo de traduções para uma aplicação multilíngue (inglês e português) e uma função para acessá-las.
+*/}
 export const translations = {
   en: {
     // Header

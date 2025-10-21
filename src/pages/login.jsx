@@ -1,3 +1,6 @@
+// /src/pages/login.jsx
+{/*Esse bloco de código é a página de login da aplicação Next.js com autenticação via next-auth.
+*/}
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';

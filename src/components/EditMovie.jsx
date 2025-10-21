@@ -1,3 +1,7 @@
+// /src/components/EditMovie.jsx
+{/*Esse bloco de código é responsável por editar um filme existente no aplicativo.
+Ele tem foco em atualizar um filme que já existe no banco de dados.
+*/}
 import { useState, useEffect } from 'react';
 import { updateMovie } from '../services/api';
 import StarRating from './StarRating';

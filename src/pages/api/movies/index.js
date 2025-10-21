@@ -1,4 +1,7 @@
-
+// /src/pages/api/movies/index.js
+{/*Esse bloco de código é uma API route do Next.js que permite a um usuário listar ou criar filmes 
+  no banco de dados MongoDB, garantindo que cada usuário só veja ou crie filmes associados a ele.
+*/}
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
 import connectDB from '../../../../lib/mongodb';

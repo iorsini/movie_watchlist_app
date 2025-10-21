@@ -1,3 +1,7 @@
+{/* /src/styles/global.css
+  Esse bloco de código é um CSS com variáveis personalizadas e integração com Tailwind.
+  Ele configura cores, fontes e suporte a modo escuro.
+*/}
 @import "tailwindcss";
 
 :root {

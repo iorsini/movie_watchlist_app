@@ -1,3 +1,5 @@
+Esse código é o servidor customizado do Next.js e conectando ao MongoDB.
+
 require('dotenv').config();
 const { createServer } = require('http');
 const { parse } = require('url');

@@ -1,3 +1,6 @@
+// /src/pages/api/auth/register.js
+{/*Esse bloco de código é uma API route do Next.js responsável por registrar (cadastrar) um novo usuário no banco de dados MongoDB.
+*/}
 import bcrypt from 'bcryptjs';
 import connectDB from '../../../../lib/mongodb'; // CAMINHO CORRETO!
 import User from '../../../../models/User'; // CAMINHO CORRETO!

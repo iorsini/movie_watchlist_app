@@ -1,3 +1,7 @@
+// /src/components/StarRating.jsx
+{/*Esse bloco de código é o componente de estrelas de avaliação.
+  Ele permite que o usuário avalie um filme clicando em 1 a 10 estrelas.
+*/}
 import { useState } from 'react';
 import { useTranslation } from '../utils/translations';
 

@@ -1,3 +1,7 @@
+// /src/pages/index.jsx
+{/*Esse bloco de código é um componente React/Next.js que funciona como a página principal da app. 
+  Ele integra autenticação, visualização e edição de filmes, além de configurações do usuário.
+*/}
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";

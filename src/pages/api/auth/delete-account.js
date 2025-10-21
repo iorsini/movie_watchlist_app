@@ -1,3 +1,6 @@
+// /src/pages/api/auth/delete-account.js
+{/*Esse bloco de código é uma API route do Next.js que permite ao usuário deletar sua conta e todos os filmes associados.
+*/}
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './[...nextauth]';
 import connectDB from '../../../../lib/mongodb';

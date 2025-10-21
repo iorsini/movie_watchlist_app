@@ -1,3 +1,6 @@
+// /src/pages/api/movies/[id].js
+{/*Esse bloco de código é uma API route do Next.js que permite a um usuário atualizar ou deletar um filme específico no banco de dados MongoDB, desde que o filme pertença a ele.
+*/}
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
 import connectDB from '../../../../lib/mongodb'; // CAMINHO CORRETO!

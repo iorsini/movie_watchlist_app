@@ -1,3 +1,6 @@
+// /src/components/WatchedMovies.jsx
+{/*Esse bloco de código é o que mostra a lista de filmes que o usuário já assistiu
+*/}
 import { useState, useEffect } from 'react';
 import { getAllMovies, deleteMovie } from '../services/api';
 import { useTranslation } from '../utils/translations';

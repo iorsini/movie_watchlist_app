@@ -1,3 +1,7 @@
+// /src/components/AddMovie.jsx
+{/*Esse bloco de código define um componente React chamado AddMovie, 
+  que é o formulário para adicionar um novo filme à base de dados.
+*/}
 import { useState } from 'react';
 import { addMovie } from '../services/api';
 import StarRating from './StarRating';

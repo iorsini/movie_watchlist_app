@@ -1,3 +1,6 @@
+// /src/pages/register.jsx
+{/*Esse bloco de código é a página de registro (sign up) da aplicação Next.js.
+*/}
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';

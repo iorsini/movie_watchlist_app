@@ -1,3 +1,7 @@
+// /src/services/api.js
+{/*Esse bloco de código é um módulo de API client em JavaScript para interagir com a rota /api/movies da app. 
+  Ele define funções para realizar as operações CRUD (Create, Read, Update, Delete) de filmes.
+*/}
 const API_URL = '/api/movies';
 
 export const getAllMovies = async () => {
