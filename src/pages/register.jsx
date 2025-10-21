@@ -251,13 +251,13 @@ export default function Register() {
               className={`lang-btn ${language === 'en' ? 'active' : ''}`}
               onClick={() => handleLanguageChange('en')}
             >
-              🇬🇧 EN
+              EN
             </button>
             <button
               className={`lang-btn ${language === 'pt' ? 'active' : ''}`}
               onClick={() => handleLanguageChange('pt')}
             >
-              🇵🇹 PT
+              PT
             </button>
           </div>
 
